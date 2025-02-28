@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>59 חטופים נשארו בעזה</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #000000;
+            font-family: Arial, sans-serif;
+            height: 100vh;
+            direction: rtl;
+            color: white;
+        }
+        
+        h1 {
+            text-align: center;
+            padding: 20px;
+            margin: 0;
+            background-color: #000000;
+            color: white;
+            box-shadow: 0 2px 5px rgba(255,255,255,0.1);
+            position: relative;
+            z-index: 10;
+        }
+        
+        .balloon-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 5;
+        }
+        
+        .balloon {
+            position: absolute;
+            cursor: pointer;
+            text-align: center;
+            transition: transform 0.3s ease;
+            z-index: 1;
+        }
+        
+        .balloon:hover {
+            transform: scale(1.1);
+        }
+        
+        .balloon-shape {
+            width: 80px;
+            height: 100px;
+            background-color: #FFD700;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            margin: 0 auto;
+            position: relative;
+            box-shadow: 2px 2px 5px rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .balloon-shape:after {
+            content: "";
+            position: absolute;
+            width: 4px;
+            height: 15px;
+            background-color: #c9aa00;
+            bottom: -15px;
+            left: 50%;
+            margin-left: -2px;
+        }
+        
+        .balloon-name {
+            font-size: 10px;
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+            padding: 5px;
+            word-wrap: break-word;
+            max-width: 70px;
+            line-height: 1.2;
+        }
+        
+        footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #000000;
+            text-align: center;
+            padding: 10px;
+            box-shadow: 0 -2px 5px rgba(255,255,255,0.1);
+            z-index: 10;
+            color: white;
+        }
+        
+        a {
+            color: #FFD700;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>59 חטופים נשארו בעזה</h1>
+    
+    <div class="balloon-container" id="balloonContainer"></div>
+    
+    <footer>
+        עמוד זה הוכן על ידי <a href="https://www.facebook.com/eliyahu.biton.1/" target="_blank">אליהו ביטון</a>
+    </footer>
+
+    <script>
+        // נתונים של שמות החטופים - רשימה מעודכנת
+        const hostageNames = [
+            "אלון אהל",
+            "אבינתן אור",
+            "עידן אלכסנדר",
+            "מתן אנגרסט",
+            "אלקנה בוחבוט",
+            "גלי ברמן",
+            "זיו ברמן",
+            "רום ברסלבסקי",
+            "ביפין ג'ושי",
+            "גיא גלבוע דלאל",
+            "אביתר דוד",
+            "איתן הורן",
+            "מקסים הרקין",
+            "יוסף חיים אוחנה",
+            "נמרוד כהן",
+            "שגב כלפון",
+            "איתן מור",
+            "עמרי מירן",
+            "עומר נאוטרה",
+            "פינטה נטפונג",
+            "תמיר נמרודי",
+            "מתן צנגוקר",
+            "דוד קוניו",
+            "אריאל קוניו",
+            "בר קופרשטיין",
+            "עידן שתיוי",
+            "תמיר אדר ז\"ל",
+            "דרור אור ז\"ל",
+            "גיא אילוז ז\"ל",
+            "מוחמד אל אטרש ז\"ל",
+            "רונן אנגל ז\"ל",
+            "אביב אצילי ז\"ל",
+            "סונטאיה אקראסי ז\"ל",
+            "אוריאל ברוך ז\"ל",
+            "סהר ברוך ז\"ל",
+            "רן גואילי ז\"ל",
+            "מני גודארד ז\"ל",
+            "הדר גולדין ז\"ל",
+            "עוז דניאל ז\"ל",
+            "ענבר הימן ז\"ל",
+            "ג'ודי וינשטיין חגי ז\"ל",
+            "אילן וייס ז\"ל",
+            "אריה זלמנוביץ' ז\"ל",
+            "גדי חגי ז\"ל",
+            "טל חיימי ז\"ל",
+            "אסף חממי ז\"ל",
+            "איתי חן ז\"ל",
+            "יאיר יעקב ז\"ל",
+            "ג'ושוע לואיטו מולל ז\"ל",
+            "איתן לוי ז\"ל",
+            "שי לוינסון ז\"ל",
+            "אליהו מרגלית ז\"ל",
+            "יונתן סמרנו ז\"ל",
+            "דניאל פרץ ז\"ל",
+            "עמירם קופר ז\"ל",
+            "יוסי שרעבי ז\"ל",
+            "עפרה קידר ז\"ל",
+            "ליאור רודאיף ז\"ל",
+            "סונתטיסאק רינטלאק ז\"ל"
+        ];
+
+        // מערך לשמירת האנימציות
+        const animations = [];
+
+        // יצירת הבלונים
+        function createBalloons() {
+            const container = document.getElementById('balloonContainer');
+            const containerWidth = container.clientWidth;
+            const containerHeight = container.clientHeight;
+            
+            hostageNames.forEach((name, index) => {
+                // יצירת אלמנט הבלון
+                const balloon = document.createElement('a');
+                balloon.href = "https://www.kan.org.il/lobby/kidnapped/?category-id=663212";
+                balloon.target = "_blank";
+                balloon.className = 'balloon';
+                
+                // מיקום אקראי של הבלון
+                const left = Math.random() * (containerWidth - 100);
+                const top = Math.random() * (containerHeight - 150) + 100;
+                
+                balloon.innerHTML = `
+                    <div class="balloon-shape">
+                        <div class="balloon-name">${name}</div>
+                    </div>
+                `;
+                
+                balloon.style.left = `${left}px`;
+                balloon.style.top = `${top}px`;
+                
+                container.appendChild(balloon);
+                
+                // שמירת מידע לאנימציה
+                const balloonData = {
+                    element: balloon,
+                    x: left,
+                    y: top,
+                    dx: (Math.random() - 0.5) * 1,  // הגדלת המהירות
+                    dy: (Math.random() - 0.5) * 1   // הגדלת המהירות
+                };
+                
+                // הוספה למערך האנימציות
+                animations.push(balloonData);
+            });
+            
+            // התחלת אנימציה
+            requestAnimationFrame(moveAllBalloons);
+        }
+        
+        // הזזת כל הבלונים בכל פריים
+        function moveAllBalloons() {
+            const container = document.getElementById('balloonContainer');
+            const containerWidth = container.clientWidth;
+            const containerHeight = container.clientHeight;
+            
+            // עדכון מיקום כל הבלונים
+            animations.forEach(balloon => {
+                // עדכון המיקום
+                balloon.x += balloon.dx;
+                balloon.y += balloon.dy;
+                
+                // בדיקת התנגשות עם גבולות המסך
+                if (balloon.x <= 0 || balloon.x >= containerWidth - 80) {
+                    balloon.dx = -balloon.dx;
+                }
+                if (balloon.y <= 0 || balloon.y >= containerHeight - 120) {
+                    balloon.dy = -balloon.dy;
+                }
+                
+                // לפעמים משנים כיוון באופן אקראי
+                if (Math.random() < 0.005) {
+                    balloon.dx = (Math.random() - 0.5) * 1;
+                    balloon.dy = (Math.random() - 0.5) * 1;
+                }
+                
+                // עדכון המיקום החדש של הבלון
+                balloon.element.style.left = `${balloon.x}px`;
+                balloon.element.style.top = `${balloon.y}px`;
+            });
+            
+            // המשך האנימציה
+            requestAnimationFrame(moveAllBalloons);
+        }
+        
+        // התחלת התוכנית לאחר טעינת העמוד
+        window.addEventListener('load', createBalloons);
+        
+        // התאמת גודל המכל בעת שינוי גודל החלון
+        window.addEventListener('resize', function() {
+            const container = document.getElementById('balloonContainer');
+            const containerWidth = container.clientWidth;
+            const containerHeight = container.clientHeight;
+            
+            // עדכון מיקום הבלונים
+            animations.forEach(balloon => {
+                // וידוא שהבלונים נשארים בתוך המסך
+                if (balloon.x > containerWidth - 80) {
+                    balloon.x = containerWidth - 80;
+                }
+                if (balloon.y > containerHeight - 120) {
+                    balloon.y = containerHeight - 120;
+                }
+                
+                // עדכון המיקום החדש של הבלון
+                balloon.element.style.left = `${balloon.x}px`;
+                balloon.element.style.top = `${balloon.y}px`;
+            });
+        });
+    </script>
+</body>
+</html>
